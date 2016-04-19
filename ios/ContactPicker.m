@@ -24,13 +24,9 @@ RCT_EXPORT_MODULE();
 
 @synthesize bridge = _bridge;
 
-
-
 - (instancetype)init {
     self.root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
     while (self.root.presentedViewController != nil) {
-        NSLog(@"Looking for root");
-        
         self.root = self.root.presentedViewController;
     }
     self.pickerController = [[ABPeoplePickerNavigationController alloc] init];
@@ -45,12 +41,11 @@ RCT_REMAP_METHOD(pickContact,resolver:(RCTPromiseResolveBlock)resolve
     self.reject = reject;
     self.pickerController.peoplePickerDelegate = self;
     [self.root presentViewController:self.pickerController animated:YES completion:nil];
-    
-    
 }
 - (void)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
                          didSelectPerson:(ABRecordRef)person {
-    NSArray* emails = (__bridge_transfer NSArray *)ABRecordCopyValue(person, kABPersonEmailProperty);
+    ABMutableMultiValueRef emailProperty  = ABRecordCopyValue(person, kABPersonEmailProperty);
+    NSArray *emails = (__bridge_transfer NSArray *)ABMultiValueCopyArrayOfAllValues(emailProperty);
     [self.root dismissViewControllerAnimated:YES completion:nil];
     self.resolve(emails);
 }

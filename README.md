@@ -4,7 +4,7 @@
 
 ## Getting started
 
-`npm install npm install doctadre/react-native-contact-picker
+`npm install doctadre/react-native-contact-picker`
 
 ### iOS
 1. In XCode, in the project navigator, right click `your project` ➜ `Add Files to [your project's name]`
@@ -15,7 +15,14 @@
 
  if you do not have rnpm: `npm install rnpm -g`
 
- rnpm link react-native-contact-picker
+ `rnpm link react-native-contact-picker`
+
+ In AndroidManifest.xml
+
+ ```xml
+ 	<!--add contact picker permissions-->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+ ```	
 
 
 ## Usage
