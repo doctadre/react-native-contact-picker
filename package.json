@@ -1,0 +1,26 @@
+{
+  "name": "react-native-contact-picker",
+  "version": "0.0.1",
+  "description": "A contact picker module for React Native",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/doctadre/react-native-contact-picker.git"
+  },
+  "keywords": [
+    "react-component",
+    "react-native",
+    "ios",
+    "contact",
+    "picker"
+  ],
+  "author": "Andre Harris",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/doctadre/react-native-contact-picker/issues"
+  },
+  "homepage": "https://github.com/doctadre/react-native-contact-picker"
+}
