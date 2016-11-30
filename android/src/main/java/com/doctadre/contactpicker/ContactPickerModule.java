@@ -4,26 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
+import android.provider.ContactsContract.CommonDataKinds.Email;
+import android.provider.ContactsContract.Contacts;
 
-import android.util.Log;
+import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Promise;
-import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.WritableArray;
-
-import android.provider.ContactsContract.Contacts;
-import android.provider.ContactsContract.CommonDataKinds.Email;
-
-import java.util.*;
 
 import static android.app.Activity.RESULT_OK;
 
 
-public class ContactPickerModule extends ReactContextBaseJavaModule implements ActivityEventListener {
+class ContactPickerModule extends ReactContextBaseJavaModule implements ActivityEventListener {
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final String DEBUG_TAG = "ContactPicker";
 
@@ -36,7 +31,7 @@ public class ContactPickerModule extends ReactContextBaseJavaModule implements A
         return "ContactPicker";
     }
 
-    public ContactPickerModule(ReactApplicationContext reactContext) {
+    ContactPickerModule(ReactApplicationContext reactContext) {
         super(reactContext);
         _reactContext = reactContext;
         _reactContext.addActivityEventListener(this);
@@ -85,5 +80,14 @@ public class ContactPickerModule extends ReactContextBaseJavaModule implements A
         } catch (Exception e) {
             mContactPickerPromise.reject(e.getMessage());
         }
+    }
+
+    /**
+     * Need this so we don't get "need to implement onNewIntent" crash
+     * Got the solution from https://github.com/marcshilling/react-native-image-picker/commit/146cf6ee56b9e0953e9136e1491e893b41edb672
+     */
+    @SuppressWarnings("unused")
+    public void onNewIntent(Intent intent) {
+        // no-op
     }
 }
