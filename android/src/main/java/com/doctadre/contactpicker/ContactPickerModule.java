@@ -48,7 +48,14 @@ class ContactPickerModule extends ReactContextBaseJavaModule implements Activity
 
     }
 
-    @Override
+    // RN >=.33 uses this signature
+    // removed @Override temporarily just to get it working on different versions of RN
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+        onActivityResult(requestCode, resultCode, data);
+    }
+
+    // RN <.33 uses this signature
+    // removed @Override temporarily just to get it working on different versions of RN
     public void  onActivityResult(int requestCode, int resultCode, Intent data) {
         WritableArray emails = Arguments.createArray();        try {
             if (resultCode == RESULT_OK) {
