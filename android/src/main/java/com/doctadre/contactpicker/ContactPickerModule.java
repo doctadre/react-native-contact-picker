@@ -8,6 +8,7 @@ import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.Contacts;
 
 import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.BaseActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -34,7 +35,7 @@ class ContactPickerModule extends ReactContextBaseJavaModule implements Activity
     ContactPickerModule(ReactApplicationContext reactContext) {
         super(reactContext);
         _reactContext = reactContext;
-        _reactContext.addActivityEventListener(this);
+        _reactContext.addActivityEventListener(mActivityEventListener);
     }
 
 
@@ -48,39 +49,42 @@ class ContactPickerModule extends ReactContextBaseJavaModule implements Activity
 
     }
 
-    @Override
-    public void  onActivityResult(int requestCode, int resultCode, Intent data) {
-        WritableArray emails = Arguments.createArray();        try {
-            if (resultCode == RESULT_OK) {
-                switch (requestCode) {
-                    case CONTACT_PICKER_RESULT:
-                        Uri result = data.getData();
-                        String id = result.getLastPathSegment();
-                        Cursor cursor = _reactContext.getContentResolver().query(
-                                Email.CONTENT_URI, null,
-                                Email.CONTACT_ID + "=?",
-                                new String[]{id}, null);
-                        try {
-                            while (cursor.moveToNext()) {
-                                int emailIdx = cursor.getColumnIndex(Email.DATA);
-                                String email = cursor.getString(emailIdx);
-                                emails.pushString(email);
+    private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
+        @Override
+        public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+            WritableArray emails = Arguments.createArray();
+            try {
+                if (resultCode == RESULT_OK) {
+                    switch (requestCode) {
+                        case CONTACT_PICKER_RESULT:
+                            Uri result = data.getData();
+                            String id = result.getLastPathSegment();
+                            Cursor cursor = _reactContext.getContentResolver().query(
+                                    Email.CONTENT_URI, null,
+                                    Email.CONTACT_ID + "=?",
+                                    new String[]{id}, null);
+                            try {
+                                while (cursor.moveToNext()) {
+                                    int emailIdx = cursor.getColumnIndex(Email.DATA);
+                                    String email = cursor.getString(emailIdx);
+                                    emails.pushString(email);
+                                }
+                            } finally {
+                                cursor.close();
                             }
-                        } finally {
-                            cursor.close();
-                        }
-                        mContactPickerPromise.resolve(emails);
-                        break;
-                }
+                            mContactPickerPromise.resolve(emails);
+                            break;
+                    }
 
-            } else {
-                // gracefully handle failure
-                mContactPickerPromise.reject("The user cancelled or there was no contact");
+                } else {
+                    // gracefully handle failure
+                    mContactPickerPromise.reject("The user cancelled or there was no contact");
+                }
+            } catch (Exception e) {
+                mContactPickerPromise.reject(e.getMessage());
             }
-        } catch (Exception e) {
-            mContactPickerPromise.reject(e.getMessage());
         }
-    }
+    };
 
     /**
      * Need this so we don't get "need to implement onNewIntent" crash

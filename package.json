@@ -1,6 +1,6 @@
 {
   "name": "react-native-contact-picker",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "description": "A contact picker module for React Native",
   "main": "index.js",
   "scripts": {
