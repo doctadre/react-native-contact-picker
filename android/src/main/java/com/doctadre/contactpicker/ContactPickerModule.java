@@ -19,7 +19,7 @@ import com.facebook.react.bridge.WritableArray;
 import static android.app.Activity.RESULT_OK;
 
 
-class ContactPickerModule extends ReactContextBaseJavaModule implements ActivityEventListener {
+class ContactPickerModule extends ReactContextBaseJavaModule {
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final String DEBUG_TAG = "ContactPicker";
 
