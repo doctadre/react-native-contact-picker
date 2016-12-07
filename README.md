@@ -10,7 +10,8 @@
 ### iOS
 1. In XCode, in the project navigator, right click `your project` ➜ `Add Files to [your project's name]`
 2. Go to `node_modules` ➜ `react-native-contact-picker` and add `ContactPicker.m`
-3. Run your project (`Cmd+R`)
+3. In XCode, open the Info.plist file and a `Privacy - Contacts Usage Description` key/value
+4. Run your project (`Cmd+R`)
 
 ### Android
 

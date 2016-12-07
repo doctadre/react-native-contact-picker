@@ -52,36 +52,38 @@ class ContactPickerModule extends ReactContextBaseJavaModule {
     private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
         @Override
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-            WritableArray emails = Arguments.createArray();
-            try {
-                if (resultCode == RESULT_OK) {
-                    switch (requestCode) {
-                        case CONTACT_PICKER_RESULT:
-                            Uri result = data.getData();
-                            String id = result.getLastPathSegment();
-                            Cursor cursor = _reactContext.getContentResolver().query(
-                                    Email.CONTENT_URI, null,
-                                    Email.CONTACT_ID + "=?",
-                                    new String[]{id}, null);
-                            try {
-                                while (cursor.moveToNext()) {
-                                    int emailIdx = cursor.getColumnIndex(Email.DATA);
-                                    String email = cursor.getString(emailIdx);
-                                    emails.pushString(email);
+            if (requestCode == ContactPickerModule.CONTACT_PICKER_RESULT) {
+                WritableArray emails = Arguments.createArray();
+                try {
+                    if (resultCode == RESULT_OK) {
+                        switch (requestCode) {
+                            case CONTACT_PICKER_RESULT:
+                                Uri result = data.getData();
+                                String id = result.getLastPathSegment();
+                                Cursor cursor = _reactContext.getContentResolver().query(
+                                        Email.CONTENT_URI, null,
+                                        Email.CONTACT_ID + "=?",
+                                        new String[]{id}, null);
+                                try {
+                                    while (cursor.moveToNext()) {
+                                        int emailIdx = cursor.getColumnIndex(Email.DATA);
+                                        String email = cursor.getString(emailIdx);
+                                        emails.pushString(email);
+                                    }
+                                } finally {
+                                    cursor.close();
                                 }
-                            } finally {
-                                cursor.close();
-                            }
-                            mContactPickerPromise.resolve(emails);
-                            break;
-                    }
+                                mContactPickerPromise.resolve(emails);
+                                break;
+                        }
 
-                } else {
-                    // gracefully handle failure
-                    mContactPickerPromise.reject("The user cancelled or there was no contact");
+                    } else {
+                        // gracefully handle failure
+                        mContactPickerPromise.reject(Integer.toString(resultCode), "The user cancelled or there was no contact");
+                    }
+                } catch (Exception e) {
+                    mContactPickerPromise.reject(Integer.toString(resultCode), e.getMessage(), e);
                 }
-            } catch (Exception e) {
-                mContactPickerPromise.reject(e.getMessage());
             }
         }
     };
