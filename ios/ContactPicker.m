@@ -5,9 +5,9 @@
 #import <AddressBookUI/AddressBookUI.h>
 
 
-#import "RCTBridgeModule.h"
-#import "RCTRootView.h"
-#import "RCTLog.h"
+#import <React/RCTBridgeModule.h>
+#import <React/RCTRootView.h>
+#import <React/RCTLog.h>
 
 
 @interface ContactPicker : NSObject <RCTBridgeModule, ABPeoplePickerNavigationControllerDelegate,UINavigationControllerDelegate>
@@ -43,7 +43,7 @@ RCT_REMAP_METHOD(pickContact,resolver:(RCTPromiseResolveBlock)resolve
     self.resolve = resolve;
     self.reject = reject;
     self.pickerController.peoplePickerDelegate = self;
-    
+
     if (ABAddressBookGetAuthorizationStatus() != kABAuthorizationStatusAuthorized) {
         ABAddressBookRequestAccessWithCompletion(self.addressBookRef, ^(bool granted, CFErrorRef error) {
             if (granted) {
