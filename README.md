@@ -1,7 +1,12 @@
 # react-native-contact-picker
 
 * Support to open contact sheet and select a user and get their emails back.
-* Note: will not work on for Android on versions below React Native 40 due to a breaking change in React Native
+
+Library | React Native
+--------|-------------
+4 | 47+
+3 | 40-46
+2 | <=39
 
 ## Getting started
 
