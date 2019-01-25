@@ -52,20 +52,28 @@ RCT_REMAP_METHOD(pickContact,resolver:(RCTPromiseResolveBlock)resolve
     if (ABAddressBookGetAuthorizationStatus() != kABAuthorizationStatusAuthorized) {
         ABAddressBookRequestAccessWithCompletion(self.addressBookRef, ^(bool granted, CFErrorRef error) {
             if (granted) {
-                [self.root presentViewController:self.pickerController animated:YES completion:nil];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+                    [root presentViewController:self.pickerController animated:YES completion:nil];
+                });
             } else {
                 self.reject(@"access_denied", @"We need access to your contacts to use this feature, please go into your settings and enable it.",(__bridge NSError *)error);
             }
         });
     } else {
-      [self.root presentViewController:self.pickerController animated:YES completion:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+            [root presentViewController:self.pickerController animated:YES completion:nil];
+        });
     }
 }
 - (void)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
                          didSelectPerson:(ABRecordRef)person {
     ABMutableMultiValueRef emailProperty  = ABRecordCopyValue(person, kABPersonEmailProperty);
     NSArray *emails = (__bridge_transfer NSArray *)ABMultiValueCopyArrayOfAllValues(emailProperty);
-    [self.root dismissViewControllerAnimated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.root dismissViewControllerAnimated:YES completion:nil];
+    });
     self.resolve(emails);
 }
 
