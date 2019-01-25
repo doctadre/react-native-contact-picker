@@ -44,11 +44,6 @@ RCT_REMAP_METHOD(pickContact,resolver:(RCTPromiseResolveBlock)resolve
     self.reject = reject;
     self.pickerController.peoplePickerDelegate = self;
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
-        [root presentViewController:self.pickerController animated:YES completion:nil];
-    });
-
     if (ABAddressBookGetAuthorizationStatus() != kABAuthorizationStatusAuthorized) {
         ABAddressBookRequestAccessWithCompletion(self.addressBookRef, ^(bool granted, CFErrorRef error) {
             if (granted) {
