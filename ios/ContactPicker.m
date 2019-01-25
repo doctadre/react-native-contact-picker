@@ -67,7 +67,8 @@ RCT_REMAP_METHOD(pickContact,resolver:(RCTPromiseResolveBlock)resolve
     ABMutableMultiValueRef emailProperty  = ABRecordCopyValue(person, kABPersonEmailProperty);
     NSArray *emails = (__bridge_transfer NSArray *)ABMultiValueCopyArrayOfAllValues(emailProperty);
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.root dismissViewControllerAnimated:YES completion:nil];
+        UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+        [dismissViewControllerAnimated:YES completion:nil];
     });
     self.resolve(emails);
 }
