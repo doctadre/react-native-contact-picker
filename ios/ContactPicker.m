@@ -68,7 +68,7 @@ RCT_REMAP_METHOD(pickContact,resolver:(RCTPromiseResolveBlock)resolve
     NSArray *emails = (__bridge_transfer NSArray *)ABMultiValueCopyArrayOfAllValues(emailProperty);
     dispatch_async(dispatch_get_main_queue(), ^{
         UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
-        [dismissViewControllerAnimated:YES completion:nil];
+        [root dismissViewControllerAnimated:YES completion:nil];
     });
     self.resolve(emails);
 }
